@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}
+    <h2>Edit Invoice</h2>
+{% endblock %}
+
+
+{% block body %}
+    <div class="row justify-content-center" style="margin: auto">
+        {{ form_start(form) }}
+        <div class="errors">
+            {{ form_errors(form) }}
+        </div>
+            {{ form_row(form.adherent) }}
+
+            {{ form_row(form.debtor) }}
+
+            {{ form_row(form.approvedAmount) }}
+
+
+            <div class="form-inline" style="float:right;">
+                <a href="{{ path('invoices') }}">{{ form_row(form.back) }}</a>
+                &nbsp;&nbsp;
+
+                {{ form_row(form.save) }}
+            </div>
+
+    </div>
+
+        {{ form_end(form) }}
+
+
+{% endblock %}

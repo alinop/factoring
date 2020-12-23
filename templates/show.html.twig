@@ -1,0 +1,202 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    Invoices
+{% endblock %}
+
+
+{% block body %}
+    <div class="row"></div>
+        <div class="container">
+            <h4>Invoices ({{ pagination.getTotalItemCount() }})</h4>
+
+            <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#filters" aria-expanded="false" aria-controls="collapseExample">
+                Show filters
+            </button>
+            <div class="collapse" id="filters">
+                <form style="margin-top: 10px;">
+                    <div class="col-md-5">
+                        <label for="adherent">Adherent</label>
+                        <div class="input-group">
+                            <select id="adherent" name="adherent" class="form-control">
+                                <option selected="true" disabled="disabled">Select</option>
+                                {% for ad in adherentDebtors %}
+                                    <option {% if(filters.adherent == ad.id) %} selected="true" {% endif %} value="{{ ad.id }}">{{ ad }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br/>
+                        <label for="adherent">Debtor</label>
+                        <div class="input-group">
+                            <select id="debtor" name="debtor" class="form-control">
+                                <option selected="true" disabled="disabled">Select</option>
+                                {% for ad in adherentDebtors %}
+                                    <option {% if(filters.debtor == ad.id) %} selected="true" {% endif %} value="{{ ad.id }}">{{ ad }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <br/>
+                        <label for="approvedAmount">Approved amount</label>
+                        <div class="input-group" id="approvedAmount">
+                            <b>RON 0</b> &nbsp;&nbsp;&nbsp;&nbsp;<input class="form-control" id="ex2" type="text" class="span2" value="" data-slider-min="0" data-slider-max="{{ filters.invoiceRange.max }}" data-slider-step="5" data-slider-value="[{{ filters.invoiceRange.min }},{{ filters.invoiceRange.max }}]" name="approvedAmount"/> &nbsp;&nbsp;&nbsp;&nbsp; <b>RON {{ filters.invoiceRange.max }}</b>
+                        </div>
+                        <br/>
+                        <label for="sortField">Sort</label> <br/>
+                        <div class="input-group">
+                            <select id="sortField" name="sortField" class="form-control">
+                                <option selected="true" disabled="disabled">Select</option>
+                                <option {% if(filters.sort.sortField == 'id') %} selected="true" {% endif %} value="id">ID</option>
+                                <option {% if(filters.sort.sortField == 'adherent') %} selected="true" {% endif %} value="adherent">ADHERENT NAME</option>
+                                <option {% if(filters.sort.sortField == 'debtor') %} selected="true" {% endif %} value="debtor">DEBTOR NAME</option>
+                                <option {% if(filters.sort.sortField == 'dueDate') %} selected="true" {% endif %} value="dueDate">DUE DATE</option>
+                                <option {% if(filters.sort.sortField == 'issueDate') %} selected="true" {% endif %} value="issueDate">ISSUE DATE</option>
+                                <option {% if(filters.sort.sortField == 'currency') %} selected="true" {% endif %} value="currency">CURRENCY</option>
+                                <option {% if(filters.sort.sortField == 'invoiceAmount') %} selected="true" {% endif %} value="invoiceAmount">INVOICE AMOUNT</option>
+                                <option {% if(filters.sort.sortField == 'requestedAmount') %} selected="true" {% endif %} value="requestedAmount">REQUESTED AMOUNT</option>
+                                <option {% if(filters.sort.sortField == 'approvedAmount') %} selected="true" {% endif %} value="approvedAmount">APPROVED AMOUNT</option>
+                            </select>
+                            <select id="sortType" name="sortType" class="form-control col-md-3">
+                                <option selected="true" disabled="disabled">Select</option>
+                                <option {% if(filters.sort.sortType == 'ASC') %} selected="true" {% endif %} value="ASC">ASC</option>
+                                <option {% if(filters.sort.sortType == 'DESC') %} selected="true" {% endif %} value="DESC">DESC</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group-append" style="margin-top: 10px;">
+                            <button type="button" id="reset"
+                                    class="btn btn-outline-secondary">
+                                Reset
+                            </button>
+                            &nbsp;&nbsp;
+                            <button type="submit"
+                                    class="btn btn-outline-secondary">
+                                Search
+                            </button>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+
+
+            <table class="table table-striped col-md-8" style="margin-top: 10px;">
+                <thead class="thead-dark ">
+                    <tr>
+                        <th scope="col" class="text-center">ID</th>
+                        <th scope="col" class="text-center">ADHERENT NAME</th>
+                        <th scope="col" class="text-center">DEBTOR NAME</th>
+                        <th scope="col" class="text-center">ISSUE DATE </th>
+                        <th scope="col" class="text-center">DUE DATE</th>
+                        <th scope="col" class="text-center">CURRENCY</th>
+                        <th scope="col" class="text-center">INVOICE AMOUNT</th>
+                        <th scope="col" class="text-center">REQUESTED AMOUNT</th>
+                        <th scope="col" class="text-center">APPROVED AMOUNT</th>
+                        <th scope="col" class="text-center">ACTION</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+                     {% for invoice in pagination %}
+                         <tr>
+                             <td class="text-center" data-href="{{ path('invoices') }}">{{ invoice.id }}</td>
+                             <td class="text-center">{{ invoice.adherent.name }}</td>
+                             <td class="text-center">{{ invoice.debtor.name }}</td>
+                             <td class="text-center">{{ invoice.issueDate|date }}</td>
+                             <td class="text-center">{{ invoice.dueDate|date }}</td>
+                             <td class="text-center">{{ invoice.currency }}</td>
+                             <td class="text-center">{{ invoice.invoiceAmount }}</td>
+                             <td class="text-center">{{ invoice.requestedAmount }}</td>
+                             <td class="text-center">{{ invoice.approvedAmount }}</td>
+                             <td class="text-center "><div class="btn-info"><a href="{{ path('invoice', { id:invoice.id }) }}" style="color: inherit;">Edit</a></div></td>
+                         </tr>
+                     {% endfor %}
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                             <td class="text-center">Total</td>
+                             <td class="text-center"></td>
+                             <td class="text-center"></td>
+                             <td class="text-center"></td>
+                             <td class="text-center"></td>
+                             <td class="text-center"></td>
+                             <td class="text-center">{{ totalAmounts.totalInvoiceAmount }}</td>
+                             <td class="text-center">{{ totalAmounts.totalRequestedAmount }}</td>
+                             <td class="text-center">{{ totalAmounts.totalApprovedAmount }}</td>
+                             <td class="text-center"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </label>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        var sliderChange = false;
+        var data = [];
+        // With JQuery
+        $("#ex2").slider({});
+
+        $("#ex2").on("change",function () {
+            sliderChange = true;
+        });
+
+        $(document).ready(function(){
+            $("#filter").on("click", function () {
+                data['invoice'] = $('#ex2').data('value');
+                data['adherent'] = $("#adherent").val();
+                data['debtor'] = $("#debtor").val();
+                data['sortField'] = $("#sortField").val();
+                data['sortType'] = $("#sortType").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: '/invoices',
+                    data: data,
+                    success: function (data) {
+
+                    },
+                    dataType: "json",
+                });
+                return false;
+            });
+
+            $("#reset").on("click", function () {
+                $("#adherent").val("Select");
+                $("#debtor").val("Select");
+                $('#ex2').data('value', '0,1000');
+                $('#ex2').data('slider-value', ['0,1000']);
+                $('#ex2').val('0,1000');
+
+                $("#sortType").val("Select");
+                $("#sortField").val("Select");
+
+                /*$("#reset").on("click", function () {
+                    console.log("CLICK");
+                    $.ajax({
+                        type: "POST",
+                        url: '/invoices',
+                        data: data,
+                        success: function () {
+
+                        },
+                        dataType: "json",
+                    });
+                    return false;
+                });*/
+            });
+        });
+    </script>
+{% endblock %}

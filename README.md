@@ -24,7 +24,9 @@ DATABASE_URL=mysql://root:123@mysql.local:3306/factoring?serverVersion=5.7
 - cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/symfony.dev.conf
 - overwrite symfony.dev.conf with:
 
- <VirtualHost *:80>
+ 
+
+        <VirtualHost *:80>
         # The ServerName directive sets the request scheme, hostname and port that
         # the server uses to identify itself. This is used when creating
         # redirection URLs. In the context of virtual hosts, the ServerName
@@ -36,8 +38,7 @@ DATABASE_URL=mysql://root:123@mysql.local:3306/factoring?serverVersion=5.7
         ServerAdmin webmaster@localhost
         ServerAlias www.symfony.dev
         DocumentRoot /var/www/html/public
-
-        DirectoryIndex index.php
+	DirectoryIndex index.php
 
         <Directory "/var/www/html/public">
                 AllowOverride All
